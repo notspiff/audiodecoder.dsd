@@ -10,11 +10,13 @@
   <extension
     point="xbmc.audiodecoder"
     name="dsd"
-    extension=".dff|.dsd"
+    extension=".dff"
+    mimetype="application/x-dff"
+    tags="false" 
     library_linux="audiodecoder.dsd.so"/>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">DSD Audio Decoder</summary>
-    <description lang="en">DSD Audio Decoder</description>
+    <summary lang="en">DSD (DFF only right now) Audio Decoder</summary>
+    <description lang="en">DSD (DFF only right now) Audio Decoder</description>
     <platform>all</platform>
   </extension>
 </addon>
