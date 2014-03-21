@@ -67,5 +67,32 @@ public:
 	}
 };
 
+inline long myround(float x)
+{
+  return static_cast<long>(x + (x>=0 ? 0.5f : -0.5f));
+}
+
+  template<typename T>
+struct id { typedef T type; };
+
+  template<typename T>
+inline T clip(
+    typename id<T>::type min,
+    T v,
+    typename id<T>::type max)
+{
+  if (v<min) return min;
+  if (v>max) return max;
+  return v;
+}
+
+inline void write_intel24(unsigned char * ptr, unsigned long word)
+{
+  ptr[0] =  word        & 0xFF;
+  ptr[1] = (word >>  8) & 0xFF;
+  ptr[2] = (word >> 16) & 0xFF;
+}
+
+
 #endif // DSD2PCM_HXX_INCLUDED
 

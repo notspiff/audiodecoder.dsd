@@ -10,8 +10,11 @@ find_package(xbmc REQUIRED)
 
 include_directories(${XBMC_INCLUDE_DIR})
 
-set(DSD_SOURCES src/dsd2pcm.c
-                src/DSDCodec.cpp)
+set(DSD_SOURCES src/bit_reverse.c
+                src/dsd2pcm.c
+                src/DSDCodec.cpp
+                src/DSDiffParser.cpp
+                src/DSFParser.cpp)
 
 set(DEPLIBS)
 
