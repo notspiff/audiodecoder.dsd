@@ -32,8 +32,7 @@ extern "C" {
 
 bool registerHelper(void* hdl)
 {
-  if (!XBMC)
-    XBMC = new ADDON::CHelper_libXBMC_addon;
+  XBMC = new ADDON::CHelper_libXBMC_addon;
 
   if (!XBMC->RegisterMe(hdl))
   {
@@ -69,7 +68,7 @@ void ADDON_Stop()
 //-----------------------------------------------------------------------------
 void ADDON_Destroy()
 {
-//  XBMC=NULL;
+  XBMC=NULL;
 }
 
 //-- HasSettings --------------------------------------------------------------
@@ -139,7 +138,6 @@ struct DSDContext
   int channels;
   int lsbitfirst;
   int block;
-  int bytespersample;
   DSDType type;
   bool bitreverse;
   int64_t datastart;
@@ -185,32 +183,29 @@ void* Init(const char* strFile, unsigned int filecache, int* channels,
     result->bitreverse = metadata.bitreverse;
     result->lsbitfirst = 0;
     result->block = 4096;
-    result->bytespersample=3;
-    *channels = result->channels;
     result->samplerate = *samplerate = metadata.sample_rate/8;
     *totaltime = metadata.chunk_size/(metadata.channels*result->samplerate)*1000;
+    result->datastart = XBMC->GetFilePosition(result->file);
   }
   else
   {
     result->type = DSDIFF;
+    result->datastart = XBMC->GetFilePosition(result->file);
     dsdiff_read_metadata_extra(result->file, &metadata, &chunk_header);
+    XBMC->SeekFile(result->file, result->datastart, SEEK_SET);
     result->channels = metadata.channels;
     result->lsbitfirst = 0;
     result->block = 16384;
-    *channels = result->channels;
     result->samplerate = *samplerate = metadata.sample_rate/8;
-    *bitspersample = result->bytespersample*8;
     *totaltime = metadata.chunk_size/(metadata.channels*result->samplerate)*1000;
   }
+  *channels = result->channels;
   *format = AE_FMT_S24LE3;
   *channelinfo = map[(result->channels==2?0:(result->channels==6?1:2))];
-  result->bytespersample=3;
-  *bitspersample = result->bytespersample*8;
+  *bitspersample = 24;
   result->dxds.resize(result->channels);
-  result->buffer = new uint8_t[result->block*result->channels*result->bytespersample];
+  result->buffer = new uint8_t[result->block*result->channels*3];
   result->buffer_size = 0;
-
-  result->datastart = XBMC->GetFilePosition(result->file);
 
   return result;
 }
@@ -237,20 +232,20 @@ int ReadPCM(void* context, uint8_t* pBuffer, int size, int *actualsize)
     for (size_t i=0;i<ctx->channels;++i)
     {
       ctx->dxds[i].translate(ctx->block,in+i,ctx->channels,ctx->lsbitfirst,float_data,1);
-      uint8_t* out = ctx->buffer+i*ctx->bytespersample;
+      uint8_t* out = ctx->buffer+i*3;
       for (size_t s=0;s<ctx->block;++s)
       {
         float r = float_data[s]*8388608;
         long smp = clip(-8388608,myround(r),8388607);
         write_intel24(out,smp);
-        out += ctx->channels*ctx->bytespersample;
+        out += ctx->channels*3;
       }
     }
-    ctx->buffer_size = ctx->channels*ctx->block*ctx->bytespersample;
+    ctx->buffer_size = ctx->channels*ctx->block*3;
   }
 
   size_t tocopy = std::min((size_t)size, ctx->buffer_size);
-  memcpy(pBuffer, ctx->buffer+ctx->block*ctx->channels*ctx->bytespersample-ctx->buffer_size, tocopy);
+  memcpy(pBuffer, ctx->buffer+ctx->block*ctx->channels*3-ctx->buffer_size, tocopy);
   ctx->buffer_size -= tocopy;
   *actualsize = tocopy;
   return 0;
@@ -281,6 +276,7 @@ bool DeInit(void* context)
 bool ReadTag(const char* strFile, char* title, char* artist,
              int* length)
 {
+  return true;
   void* file = XBMC->OpenFile(strFile, 0);
   if (!file)
     return false;

@@ -12,7 +12,6 @@
     name="dsd"
     extension=".dff|.dsf"
     mimetype="application/x-dff|application/x-dsf"
-    tags="false" 
     library_linux="audiodecoder.dsd.so"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">DSD (DSF/DFF) Audio Decoder</summary>
