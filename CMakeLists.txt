@@ -6,9 +6,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR})
 
 enable_language(CXX)
 
-find_package(xbmc REQUIRED)
+find_package(kodi REQUIRED)
 
-include_directories(${XBMC_INCLUDE_DIR})
+include_directories(${KODI_INCLUDE_DIR})
 
 set(DSD_SOURCES src/bit_reverse.c
                 src/dsd2pcm.c
