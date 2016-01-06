@@ -16,10 +16,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "kodi/libXBMC_addon.h"
+#include "libXBMC_addon.h"
 
-#include "kodi/kodi_audiodec_dll.h"
-#include "kodi/AEChannelData.h"
+#include "kodi_audiodec_dll.h"
+#include "AEChannelData.h"
 #include "dsd2pcm.hpp"
 #include <iostream>
 
