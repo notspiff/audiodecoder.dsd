@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="audiodecoder.dsd"
-  version="1.0.0"
+  version="1.1.0"
   name="DSD Audio Decoder"
   provider-name="spiff">
   <requires>
@@ -12,10 +12,10 @@
     name="dsd"
     extension=".dff|.dsf"
     mimetype="application/x-dff|application/x-dsf"
-    library_linux="audiodecoder.dsd.so"/>
+    library_@PLATFORM@="@LIBRARY_FILENAME@"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">DSD (DSF/DFF) Audio Decoder</summary>
     <description lang="en">DSD (DSF/DFF) Audio Decoder</description>
-    <platform>all</platform>
+    <platform>@PLATFORM@</platform>
   </extension>
 </addon>
